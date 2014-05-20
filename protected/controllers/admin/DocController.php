@@ -31,6 +31,8 @@ class DocController extends Controller {
         unset($values['editorValue']);
         $doc = new Doc();
         $doc->attributes = $values;
+        $doc->created = time();
+        $doc->updated = time();
         $doc->save();
         $msg = array('message'=>"文章保存成功", 'icon'=>'success');
         Yii::app()->user->setFlash('message', json_encode($msg));
