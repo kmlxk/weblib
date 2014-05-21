@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * GUID是文章记录的唯一编号，几乎不会冲突，同步时以GUID为主，
+ * 此外HASH值用于标示文章属性和内容是否有修改，如果修改过也需要更新。
+ */
 class SyncController extends Controller {
 
     public function actionIndex() {
@@ -9,25 +13,25 @@ class SyncController extends Controller {
         var_dump($together);
         var_dump(array_diff_key($ar1, $together));
         var_dump(array_diff_key($ar2, $together));
+        var_dump(guid());
     }
 
-
     /**
-     * 获取所有文档的hash
+     * 获取所有文档的guid/hash
      */
-    public function actionGetHashList() {
+    public function actionGetList() {
         $models = Doc::model()->findAll(array(
-            'select' => 'id, hash',
+            'select' => 'id, hash, guid',
                 ));
         $ret = array();
         foreach ($models as $item) {
-            $ret[] = $item->hash;
+            $ret[$item->guid] = $item->hash;
         }
         echo json_encode($ret);
     }
 
     /**
-     * 更新所有文档的hash
+     * 更新所有文档的hash，一般不用这样的操作
      */
     public function actionUpdateHash() {
 
@@ -42,6 +46,24 @@ class SyncController extends Controller {
             echo $hash;
             echo ' : ';
             echo $item->save(false, array('hash'));
+            echo '<br />';
+        }
+    }
+
+    /**
+     * 更新所有文档的hash，一般不用这样的操作
+     */
+    public function actionUpdateGuid() {
+        $models = Doc::model()->findAll(array(
+            'select' => 'id, title, url, hash, created, updated',
+                ));
+        foreach ($models as $item) {
+            $item->guid = guid();
+            echo $item->id;
+            echo ' : ';
+            echo $item->guid;
+            echo ' : ';
+            echo $item->save(false, array('guid'));
             echo '<br />';
         }
     }

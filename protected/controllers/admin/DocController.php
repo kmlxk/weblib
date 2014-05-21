@@ -33,6 +33,8 @@ class DocController extends Controller {
         $doc->attributes = $values;
         $doc->created = time();
         $doc->updated = time();
+        $doc->guid = guid();
+        $doc->hash = DocService::getHash($doc);
         $doc->save();
         $msg = array('message'=>"文章保存成功", 'icon'=>'success');
         Yii::app()->user->setFlash('message', json_encode($msg));
