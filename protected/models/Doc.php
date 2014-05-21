@@ -9,6 +9,14 @@
  * @property string $url
  * @property string $content
  * @property string $tags
+ * @property integer $status
+ * @property integer $created
+ * @property integer $updated
+ * @property integer $author_id
+ * @property string $author
+ * @property string $hash
+ * @property string $key
+ * @property string $guid
  */
 class Doc extends CActiveRecord
 {
@@ -28,11 +36,15 @@ class Doc extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('title, content', 'required'),
+			array('status, created, updated, author_id', 'numerical', 'integerOnly'=>true),
 			array('title, url, tags', 'length', 'max'=>255),
+			array('author', 'length', 'max'=>120),
+			array('hash, guid', 'length', 'max'=>32),
+			array('key', 'length', 'max'=>128),
+			array('content', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, title, url, content, tags', 'safe', 'on'=>'search'),
+			array('id, title, url, content, tags, status, created, updated, author_id, author, hash, key, guid', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -58,6 +70,14 @@ class Doc extends CActiveRecord
 			'url' => 'Url',
 			'content' => 'Content',
 			'tags' => 'Tags',
+			'status' => 'Status',
+			'created' => 'Created',
+			'updated' => 'Updated',
+			'author_id' => 'Author',
+			'author' => 'Author',
+			'hash' => 'Hash',
+			'key' => 'Key',
+			'guid' => 'Guid',
 		);
 	}
 
@@ -84,6 +104,14 @@ class Doc extends CActiveRecord
 		$criteria->compare('url',$this->url,true);
 		$criteria->compare('content',$this->content,true);
 		$criteria->compare('tags',$this->tags,true);
+		$criteria->compare('status',$this->status);
+		$criteria->compare('created',$this->created);
+		$criteria->compare('updated',$this->updated);
+		$criteria->compare('author_id',$this->author_id);
+		$criteria->compare('author',$this->author,true);
+		$criteria->compare('hash',$this->hash,true);
+		$criteria->compare('key',$this->key,true);
+		$criteria->compare('guid',$this->guid,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
