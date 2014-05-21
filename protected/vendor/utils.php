@@ -1,5 +1,20 @@
 <?php
 
+function getJsonData($data, $success = true, $message = '') {
+    return array(
+        'success' => $success,
+        'message' => $message,
+        'data' => $data,
+    );
+}
+
+function getJsonMessage($success, $message) {
+    return array(
+        'success' => $success,
+        'message' => $message,
+    );
+}
+
 function guid($pure = true) {
     if (function_exists('com_create_guid')) {
         $guid = com_create_guid();

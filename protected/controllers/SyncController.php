@@ -17,22 +17,18 @@ class SyncController extends Controller {
     }
 
     public function actionCompare() {
-        $base = 'http://127.0.0.1:9000/weblib-srv/index.php';
+        $base = 'http://127.0.0.1:9000/weblib2/index.php';
         SyncService::sync($base);
     }
-    
-    
 
     public function actionGetDocByGuid($guids) {
         $guids = explode(',', $guids);
-        $strGuid = implode("','", $guids);
-        $models = Doc::model()->findAll("guid in (:guids)", array(':guids'=>$strGuid));
+        $models = Doc::model()->findAllByAttributes(array("guid"=>$guids));
         $list = array();
         foreach ($models as $item) {
             $list[] = $item->attributes;
         }
-        var_dump($list);
-        
+        echo json_encode(getJsonData($list, true));
     }
 
     /**

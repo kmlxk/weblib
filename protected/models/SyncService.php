@@ -1,10 +1,9 @@
 <?php
 
 class SyncService {
-
     const LOCAL_NEED = 'LOCAL';
     const REMOTE_NEED = 'REMOTE';
-    
+
     /**
      * 对比本地和远程的差别
      * @param $remote 远程GUID->hash数组
@@ -52,17 +51,17 @@ class SyncService {
         $remote = SyncService::getRemoteList($remoteBase);
         $local = SyncService::getLocalList();
         $ret = SyncService::compare($local, $remote);
-        $remoteNeed =  $ret[self::REMOTE_NEED];
-        $localNeed =  $ret[self::LOCAL_NEED];
+        $remoteNeed = $ret[self::REMOTE_NEED];
+        $localNeed = $ret[self::LOCAL_NEED];
         $guids = array();
-        foreach ($localNeed as $guid=>$hash) {
+        foreach ($localNeed as $guid => $hash) {
             $guids[] = $guid;
         }
-        $url = $remoteBase . '?r=sync/GetDocByGuid&guids='.implode(',', $guids);
+
+        $url = $remoteBase . '?r=sync/GetDocByGuid&guids=' . implode(',', $guids);
         $json = file_get_contents($url);
         $item = json_decode($json, true);
         var_dump($item);
-        
     }
 
 }
