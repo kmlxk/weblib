@@ -16,27 +16,38 @@ class SyncController extends Controller {
         var_dump(guid());
     }
 
-    public function actionCompare() {
-        $base = 'http://127.0.0.1:9000/weblib2/index.php';
-        SyncService::sync($base);
+    public function actionSync($url) {
+        SyncService::sync($url);
     }
 
+    /**
+     * 远程接口：根据GUID获取所有文档
+     */
     public function actionGetDocByGuid($guids) {
         $guids = explode(',', $guids);
-        $models = Doc::model()->findAllByAttributes(array("guid"=>$guids));
-        $list = array();
-        foreach ($models as $item) {
-            $list[] = $item->attributes;
-        }
+        $list = SyncService::getDocByGuids($guids);
         echo json_encode(getJsonData($list, true));
     }
 
     /**
-     * 获取所有文档的guid/hash
+     * 远程接口：获取所有文档的guid/hash
      */
     public function actionGetList() {
         $ret = SyncService::getLocalList();
         echo json_encode($ret);
+    }
+
+    /**
+     * 远程接口：添加多个文档
+     */
+    public function actionAddDocs() {
+        $json = Yii::app()->request->getParam('json');
+        $list = json_decode($json, true);
+        foreach ($list as $item) {
+            $doc = new Doc();
+            $doc->attributes = $item;
+            $doc->save();
+        }
     }
 
     /**

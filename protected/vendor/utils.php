@@ -1,5 +1,31 @@
 <?php
 
+/**
+ * HTTP助手
+ */
+class HttpHelper {
+
+    /**
+     * POST数据
+     * @param $url string url
+     * @param $data string data
+     */
+    public static function post($url, $data) {
+        $params = array(
+            'http' => array(
+                'method' => 'POST',
+                'header' => "Content-type:application/x-www-form-urlencoded",
+                'content' => http_build_query($data),
+                ));
+        $response = file_get_contents($url, false, stream_context_create($params));
+        return $response;
+    }
+
+}
+
+/**
+ * 定义统一的json返回格式
+ */
 function getJsonData($data, $success = true, $message = '') {
     return array(
         'success' => $success,

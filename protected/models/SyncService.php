@@ -23,8 +23,8 @@ class SyncService {
     /**
      * 获取远程的文档GUID:hash列表
      */
-    public static function getRemoteList($remoteBase) {
-        $url = $remoteBase . '?r=sync/getlist';
+    public static function getRemoteList($baseUrl) {
+        $url = $baseUrl . '?r=sync/getlist';
         $json = file_get_contents($url);
         $remote = json_decode($json, true);
         return $remote;
@@ -45,23 +45,53 @@ class SyncService {
     }
 
     /**
-     * 同步
+     * 根据guid数组获取文档
+     * @param $guids array GUID数组
      */
-    public static function sync($remoteBase) {
-        $remote = SyncService::getRemoteList($remoteBase);
+    public static function getDocByGuids($guids) {
+        $models = Doc::model()->findAllByAttributes(array("guid" => $guids));
+        $list = array();
+        foreach ($models as $item) {
+            $list[] = $item->attributes;
+        }
+        return $list;
+    }
+
+    /**
+     * 获取guid数组远程的文档
+     * @param $baseUrl string 远程 app URL
+     * @param $guids array GUID数组
+     */
+    public static function getRemoteDocByGuids($baseUrl, $guids) {
+        $url = $baseUrl . '?r=sync/GetDocByGuid&guids=' . implode(',', $guids);
+        $json = file_get_contents($url);
+        $list = json_decode($json, true);
+        return $list['data'];
+    }
+
+    /**
+     * 同步
+     * @param $baseUrl string 远程 app URL
+     */
+    public static function sync($baseUrl) {
+        $remote = SyncService::getRemoteList($baseUrl);
         $local = SyncService::getLocalList();
         $ret = SyncService::compare($local, $remote);
-        $remoteNeed = $ret[self::REMOTE_NEED];
-        $localNeed = $ret[self::LOCAL_NEED];
-        $guids = array();
-        foreach ($localNeed as $guid => $hash) {
-            $guids[] = $guid;
-        }
 
-        $url = $remoteBase . '?r=sync/GetDocByGuid&guids=' . implode(',', $guids);
-        $json = file_get_contents($url);
-        $item = json_decode($json, true);
-        var_dump($item);
+// 获取远程服务器中新增的doc，并添加
+        $guids = array_keys($ret[self::LOCAL_NEED]);
+        $docs = SyncService::getRemoteDocByGuids($baseUrl, $guids);
+        foreach ($docs as $item) {
+            $doc = new Doc();
+            $doc->attributes = $item;
+            $doc->save();
+        }
+// 获取本地服务器中新增的doc，并发送到远程
+        $guids = array_keys($ret[self::REMOTE_NEED]);
+        $docs = SyncService::getDocByGuids($guids);
+        $json = json_encode($docs);
+        $url = $baseUrl . '?r=sync/AddDocs';
+        HttpHelper::post($url, array('json'=>$json));
     }
 
 }
