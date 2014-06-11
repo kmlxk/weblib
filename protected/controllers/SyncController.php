@@ -1,5 +1,19 @@
 <?php
 
+function initProxy() {
+    $ip = gethostbyname(null);
+    if (strpos($ip, '10.98.') == 0) {
+        $arContext = array(
+            'http' => array(
+                'proxy' => 'tcp://127.0.0.1:8000',
+                'request_fulluri' => true,
+            ),
+        );
+        $cxContext = stream_context_get_default($arContext);
+    }
+}
+initProxy();
+
 /**
  * GUID是文章记录的唯一编号，几乎不会冲突，同步时以GUID为主，
  * 此外HASH值用于标示文章属性和内容是否有修改，如果修改过也需要更新。
@@ -17,6 +31,7 @@ class SyncController extends Controller {
     }
 
     public function actionSync($url) {
+        set_time_limit(1800);
         SyncService::sync($url);
     }
 
