@@ -2,6 +2,7 @@
 	<h3>
 		<?php echo CHtml::link(CHtml::encode($data->title), array('doc/view', 'id'=>$data->id)); ?>
 	</h3>
+    <p><?php echo $data->comment; ?></p>
 	<span>
 		<b>发表:</b> <?php echo $data->author . ' ' . date('Y-m-d',$data->created); ?>
         | 

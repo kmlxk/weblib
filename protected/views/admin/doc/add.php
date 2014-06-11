@@ -30,19 +30,24 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl .'/../libs/ueditor1_4_2-utf
                     <!-- Set class to "column-left" or "column-right" on fieldsets to divide the form into columns -->
                     <p>
                         <label>标题</label>
-                        <input type="text" name="title" id="medium-input" class="text-input medium-input datepicker">
+                        <input type="text" name="title" id="medium-input" class="text-input medium-input">
                         <span class="input-notification success png_bg"></span>
                     </p>
                     <p>
                         <label>网址</label>
-                        <input type="text" name="url" id="medium-input" class="text-input medium-input datepicker">
+                        <input type="text" name="url" id="medium-input" class="text-input medium-input">
                         <span class="input-notification success png_bg"></span>
                     </p>
                     <p>
                         <label>标签</label>
-                        <input type="text" name="tags" id="medium-input" class="text-input medium-input datepicker">
+                        <input type="text" name="tags" id="medium-input" class="text-input medium-input">
                         <span class="input-notification success png_bg">竖线|分割多个标签</span>
                     </p>
+                    <p>
+                        <label>摘要/评论</label>
+                        <textarea name="comment" class="text-input medium-input" style="width:100%;height:80px;"></textarea>
+                        <span class="input-notification success png_bg"></span>
+                    </p>                    
                     <p>
                         <script id="editor" type="text/plain" style="width:100%;height:250px;"></script>
                     </p>

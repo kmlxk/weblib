@@ -33,6 +33,7 @@ class DocController extends Controller {
         $doc->attributes = $values;
         $doc->created = time();
         $doc->updated = time();
+        $doc->status = 1;
         $doc->guid = guid();
         $doc->hash = DocService::getHash($doc);
         $doc->save();

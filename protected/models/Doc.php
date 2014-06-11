@@ -17,6 +17,7 @@
  * @property string $hash
  * @property string $key
  * @property string $guid
+ * @property string $comment
  */
 class Doc extends CActiveRecord
 {
@@ -41,10 +42,10 @@ class Doc extends CActiveRecord
 			array('author', 'length', 'max'=>120),
 			array('hash, guid', 'length', 'max'=>32),
 			array('key', 'length', 'max'=>128),
-			array('content', 'safe'),
+			array('content, comment', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, title, url, content, tags, status, created, updated, author_id, author, hash, key, guid', 'safe', 'on'=>'search'),
+			array('id, title, url, content, tags, status, created, updated, author_id, author, hash, key, guid, comment', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -78,6 +79,7 @@ class Doc extends CActiveRecord
 			'hash' => 'Hash',
 			'key' => 'Key',
 			'guid' => 'Guid',
+			'comment' => 'Comment',
 		);
 	}
 
@@ -112,6 +114,7 @@ class Doc extends CActiveRecord
 		$criteria->compare('hash',$this->hash,true);
 		$criteria->compare('key',$this->key,true);
 		$criteria->compare('guid',$this->guid,true);
+		$criteria->compare('comment',$this->comment,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

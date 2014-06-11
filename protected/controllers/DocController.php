@@ -7,7 +7,7 @@ class DocController extends Controller {
     public function actionIndex() {
         $dpDoc = new CActiveDataProvider('Doc', array(
                     'criteria' => array(
-                        'select' => 'id, title, url, created, updated, author, tags',
+                        'select' => 'id, title, url, created, updated, author, tags, comment',
                         'condition' => 'status=1',
                         'order' => 'created DESC',
                     ),
