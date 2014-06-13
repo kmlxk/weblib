@@ -80,18 +80,22 @@ class SyncService {
 
 // 获取远程服务器中新增的doc，并添加
         $guids = array_keys($ret[self::LOCAL_NEED]);
-        $docs = SyncService::getRemoteDocByGuids($baseUrl, $guids);
-        foreach ($docs as $item) {
-            $doc = new Doc();
-            $doc->attributes = $item;
-            $doc->save();
+        if (count($guids) > 0) {
+            $docs = SyncService::getRemoteDocByGuids($baseUrl, $guids);
+            foreach ($docs as $item) {
+                $doc = new Doc();
+                $doc->attributes = $item;
+                $doc->save();
+            }
         }
 // 获取本地服务器中新增的doc，并发送到远程
         $guids = array_keys($ret[self::REMOTE_NEED]);
-        $docs = SyncService::getDocByGuids($guids);
-        $json = json_encode($docs);
-        $url = $baseUrl . '?r=sync/AddDocs';
-        HttpHelper::post($url, array('json'=>$json));
+        if (count($guids) > 0) {
+            $docs = SyncService::getDocByGuids($guids);
+            $json = json_encode($docs);
+            $url = $baseUrl . '?r=sync/AddDocs';
+            HttpHelper::post($url, array('json'=>$json));
+        }
     }
 
 }
