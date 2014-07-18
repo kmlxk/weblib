@@ -12,7 +12,7 @@ function initProxy() {
         $cxContext = stream_context_get_default($arContext);
     }
 }
-initProxy();
+//initProxy();
 
 /**
  * GUID是文章记录的唯一编号，几乎不会冲突，同步时以GUID为主，

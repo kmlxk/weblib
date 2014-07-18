@@ -91,59 +91,8 @@ pre code { background: transparent; }
 </header>
 
 
-    <!-- Docs page layout -->
-    <div class="bs-header" id="content">
-      <div class="container">
-        <h1>起步</h1>
-        <p>简要介绍Bootstrap，以及如何下载、使用，基本模版和案例，等等。</p>
-        
-      </div>
-    </div>
-
     <!-- Callout for the old docs link -->
-    
-
-    <div class="container bs-docs-container">
-      <div class="row">
-        <div class="col-md-3">
-          <div class="bs-sidebar hidden-print" role="complementary">
-            <ul class="nav bs-sidenav">
-              
-                <li>
-  <a href="#download">下载Bootstrap</a>
-  <ul class="nav">
-    <li><a href="#download-compiled">编译后的CSS、JS和字体文件</a></li>
-    <li><a href="#download-additional">额外的下载渠道</a></li>
-    <li><a href="#download-cdn">Bootstrap CDN</a></li>
-  </ul>
-</li>
-<li>
-  <a href="#whats-included">包含了哪些文件</a>
-  <ul class="nav">
-    <li><a href="#whats-included-precompiled">编译版</a></li>
-    <li><a href="#whats-included-source">源码</a></li>
-  </ul>
-</li>
-<li>
-  <a href="#template">基本模版</a>
-</li>
-<li>
-  <a href="#examples">案例</a>
-</li>
-
-                                  
-            </ul>
-          </div>
-        </div>
-        <div class="col-md-9" role="main">
-          
-<?php echo $content; ?>
-<!-- end of main content -->
-
-        </div>
-      </div>
-
-    </div>
+    <?php echo $content; ?>
 
     <!-- Footer
     ================================================== -->

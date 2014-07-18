@@ -1,6 +1,7 @@
 <?php
 
 class SyncService {
+
     const LOCAL_NEED = 'LOCAL';
     const REMOTE_NEED = 'REMOTE';
 
@@ -36,7 +37,7 @@ class SyncService {
     public static function getLocalList() {
         $models = Doc::model()->findAll(array(
             'select' => 'id, hash, guid',
-                ));
+        ));
         $local = array();
         foreach ($models as $item) {
             $local[$item->guid] = $item->hash;
@@ -64,6 +65,7 @@ class SyncService {
      */
     public static function getRemoteDocByGuids($baseUrl, $guids) {
         $url = $baseUrl . '?r=sync/GetDocByGuid&guids=' . implode(',', $guids);
+        Yii::log("getRemoteDocByGuids($url)" . print_r($guids, true), 'debug', 'syncservice.sync');
         $json = file_get_contents($url);
         $list = json_decode($json, true);
         return $list['data'];
@@ -80,21 +82,27 @@ class SyncService {
 
 // 获取远程服务器中新增的doc，并添加
         $guids = array_keys($ret[self::LOCAL_NEED]);
+
         if (count($guids) > 0) {
-            $docs = SyncService::getRemoteDocByGuids($baseUrl, $guids);
-            foreach ($docs as $item) {
-                $doc = new Doc();
-                $doc->attributes = $item;
-                $doc->save();
+            foreach ($guids as $guid) {
+                $docs = SyncService::getRemoteDocByGuids($baseUrl, array($guid));
+                foreach ($docs as $item) {
+                    $doc = new Doc();
+                    $doc->attributes = $item;
+                    $doc->save();
+                }
             }
         }
 // 获取本地服务器中新增的doc，并发送到远程
         $guids = array_keys($ret[self::REMOTE_NEED]);
         if (count($guids) > 0) {
-            $docs = SyncService::getDocByGuids($guids);
-            $json = json_encode($docs);
-            $url = $baseUrl . '?r=sync/AddDocs';
-            HttpHelper::post($url, array('json'=>$json));
+            foreach ($guids as $guid) {
+                $docs = SyncService::getDocByGuids(array($guid));
+                $json = json_encode($docs);
+                $url = $baseUrl . '?r=sync/AddDocs';
+                Yii::log("postDoc($url)" . print_r($guids, true), 'debug', 'syncservice.sync');
+                HttpHelper::post($url, array('json' => $json));
+            }
         }
     }
 
